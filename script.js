@@ -1589,5 +1589,8 @@ document.addEventListener('DOMContentLoaded', () => {
     statusDiv.className = 'status disconnected';
     
     // Abre a primeira aba por padrão
-    openTab(currentActiveTab);
+    openTab(currentActiveT);
+
+    // Conecta automaticamente ao carregar a página
+    connectWebSocket();
 });

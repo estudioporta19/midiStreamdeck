@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIDI Controller Web</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Controlador MIDI Web</h1>
+
+        <div class="connection-section">
+            <div class="ip-input-group">
+                <span class="protocol">ws://</span>
+                <input type="number" id="ipPart1" class="ip-part" min="0" max="255" value="192">.
+                <input type="number" id="ipPart2" class="ip-part" min="0" max="255" value="168">.
+                <input type="number" id="ipPart3" class="ip-part" min="0" max="255" value="1">.
+                <input type="number" id="ipPart4" class="ip-part" min="0" max="255" value="100">
+                <span class="port-part">:8080</span>
+            </div>
+            <button id="connectBtn">Conectar</button>
+            <div id="statusDiv" class="status disconnected">Aguardando conexão...</div>
+            <div id="lastMessageInfo" class="status"></div>
+        </div>
+
+        <div class="tab-buttons">
+            <button class="tab-button active" data-tab="customDeck1">Deck 1</button>
+            <button class="tab-button" data-tab="customDeck2">Deck 2</button>
+            <button class="tab-button" data-tab="customDeck3">Deck 3</button>
+            <button class="tab-button" data-tab="cueList">Cue List</button>
+        </div>
+
+        <div id="customDeck1Tab" class="tab-content active">
+            <div class="deck-header">
+                <h2>Deck MIDI Personalizado 1</h2>
+                <div class="deck-actions"> <button id="toggleEditModeBtn1" class="edit-mode-toggle-btn">Ativar Modo de Edição</button>
+                    <button id="clearDeckBtn1" class="clear-deck-btn">Limpar Deck</button> </div>
+            </div>
+            <div id="customDeckGrid1" class="midi-grid">
+            </div>
+        </div>
+
+        <div id="customDeck2Tab" class="tab-content">
+            <div class="deck-header">
+                <h2>Deck MIDI Personalizado 2</h2>
+                <div class="deck-actions"> <button id="toggleEditModeBtn2" class="edit-mode-toggle-btn">Ativar Modo de Edição</button>
+                    <button id="clearDeckBtn2" class="clear-deck-btn">Limpar Deck</button> </div>
+            </div>
+            <div id="customDeckGrid2" class="midi-grid">
+            </div>
+        </div>
+
+        <div id="customDeck3Tab" class="tab-content">
+            <div class="deck-header">
+                <h2>Deck MIDI Personalizado 3</h2>
+                <div class="deck-actions"> <button id="toggleEditModeBtn3" class="edit-mode-toggle-btn">Ativar Modo de Edição</button>
+                    <button id="clearDeckBtn3" class="clear-deck-btn">Limpar Deck</button> </div>
+            </div>
+            <div id="customDeckGrid3" class="midi-grid">
+            </div>
+        </div>
+
+        <div id="cueListTab" class="tab-content">
+            <div class="cue-list-header">
+                <h2>Cue List</h2>
+                <div class="cue-controls">
+                    <button id="addCueBtn" class="add-cue-btn">Criar Cue</button>
+                    <button id="goPrevCueBtn" class="cue-nav-btn">GO-</button>
+                    <button id="goNextCueBtn" class="cue-nav-btn">GO</button>
+		    <button id="clearCueListBtn" class="clear-list-btn">Limpar Lista</button>
+                </div>
+            </div>
+            <div id="cuesContainer" class="cues-container">
+                <p class="no-cues-message">Nenhuma cue na lista. Clique em "Criar Cue" para começar.</p>
+            </div>
+        </div>
+        
+        <div class="info-footer">
+            <p>Desenvolvido por Diogo Russo em 2025</p>
+        </div>
+    </div>
+
+    <div id="configModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeConfigModalBtn">&times;</span>
+            <h2>Configurar Botão MIDI</h2>
+            <div class="form-group">
+                <label for="configLabel">Nome do Botão:</label>
+                <input type="text" id="configLabel" placeholder="Ex: Baixo On">
+            </div>
+            <div class="form-group">
+                <label for="configType">Tipo de Mensagem:</label>
+                <select id="configType">
+                    <option value="note">Nota MIDI (Note On/Off)</option>
+                    <option value="cc">Controle Contínuo (CC)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="configMidiChannel">Canal MIDI (1-16):</label>
+                <input type="number" id="configMidiChannel" min="1" max="16" value="1">
+            </div>
+            <div class="form-group">
+                <label for="configMidiNumber">Número MIDI (0-127):</label>
+                <input type="number" id="configMidiNumber" min="0" max="127" value="60">
+            </div>
+            <div class="form-group" id="configValueGroup">
+                <label for="configValue">Velocidade (1-127):</label>
+                <input type="number" id="configValue" min="1" max="127" value="100">
+            </div>
+            <div class="form-group">
+                <label for="configColor">Cor do Botão:</label>
+                <input type="color" id="configColor" value="#607d8b">
+            </div>
+            <button id="saveConfigBtn">Salvar Configuração</button>
+	    <button id="clearButtonConfigBtn" class="action-btn danger-btn">Limpar Botão</button>
+        </div>
+    </div>
+
+    <div id="cueConfigModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeCueConfigModalBtn">&times;</span>
+            <h2>Configurar Cue MIDI</h2>
+            <div class="form-group">
+                <label for="cueConfigLabel">Nome da Cue:</label>
+                <input type="text" id="cueConfigLabel" placeholder="Ex: Lançar Intro Vocal">
+            </div>
+ 		<div class="form-group">
+                <label for="cueConfigMediaType">Tipo de Conteúdo:</label>
+                <select id="cueConfigMediaType">
+                    <option value="audio">Áudio</option>
+                    <option value="video">Vídeo</option>
+                    <option value="command">Comandos</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="cueConfigQuantity">Quantidade de Cues:</label>
+                <input type="number" id="cueConfigQuantity" min="1" value="1">
+            </div>
+            <div class="form-group">
+                <label for="cueConfigType">Tipo de Mensagem:</label>
+                <select id="cueConfigType">
+                    <option value="note">Nota MIDI (Note On/Off)</option>
+                    <option value="cc">Controle Contínuo (CC)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cueConfigMidiChannel">Canal MIDI (1-16):</label>
+                <input type="number" id="cueConfigMidiChannel" min="1" max="16" value="1">
+            </div>
+            <div class="form-group">
+                <label for="cueConfigMidiNumber">Número MIDI (0-127):</label>
+                <input type="number" id="cueConfigMidiNumber" min="0" max="127" value="60">
+            </div>
+            <div class="form-group" id="cueConfigValueGroup">
+                <label for="cueConfigValue">Velocidade (1-127):</label>
+                <input type="number" id="cueConfigValue" min="1" max="127" value="100">
+            </div>
+            <div class="form-group">
+                <label for="cueConfigDelay">Delay (segundos):</label>
+                <input type="number" id="cueConfigDelay" min="0" max="60" value="0" step="0.1">
+            </div>
+            <div class="form-group">
+                <label for="cueConfigColor">Cor da Cue:</label>
+                <input type="color" id="cueConfigColor" value="#4CAF50">
+            </div>
+            <button id="saveCueConfigBtn">Criar Cue</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

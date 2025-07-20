@@ -1,0 +1,778 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alinha no topo, para não centralizar verticalmente em telas grandes */
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: #3a3a3a;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    padding: 30px;
+    width: 100%;
+    max-width: 800px; /* Mantém a largura máxima */
+    text-align: center;
+    box-sizing: border-box;
+}
+
+h1 {
+    color: #90caf9;
+    margin-bottom: 25px;
+    font-size: 2.2em;
+    font-weight: 600;
+}
+
+/* --- Connection Section --- */
+.connection-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #555;
+}
+
+/* IP Input Group Styling */
+.ip-input-group {
+    display: flex;
+    align-items: center;
+    background-color: #4a4a4a;
+    border: 1px solid #555;
+    border-radius: 8px;
+    padding: 8px 12px;
+    flex-grow: 1;
+    max-width: 350px;
+}
+
+.ip-input-group .protocol,
+.ip-input-group .port-part {
+    color: #b0b0b0;
+    font-size: 1em;
+    padding: 0 2px;
+}
+
+.ip-input-group .ip-part {
+    width: 45px; /* Adjust width for 3 digits */
+    padding: 5px 0;
+    border: none;
+    background-color: transparent;
+    color: #e0e0e0;
+    font-size: 1em;
+    text-align: center;
+    -moz-appearance: textfield; /* Remove spinner for Firefox */
+    appearance: textfield; /* Remove spinner for other browsers */
+    outline: none;
+}
+/* Remove number input arrows for WebKit browsers */
+.ip-input-group .ip-part::-webkit-outer-spin-button,
+.ip-input-group .ip-part::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* --- General Button Styles --- */
+button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    flex-shrink: 0;
+}
+
+button:hover:not(:disabled) {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* --- Status Message --- */
+.status {
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+.status.connected {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+
+.status.disconnected {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+
+/* --- Tab Controls --- */
+.tab-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+    background-color: #4a4a4a;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.tab-button {
+    flex-grow: 1;
+    padding: 15px 20px;
+    background-color: #4a4a4a;
+    color: #e0e0e0;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    border-radius: 0;
+}
+
+.tab-button:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.tab-button:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.tab-button:hover:not(.active) {
+    background-color: #5a5a5a;
+}
+
+.tab-button.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.tab-content {
+    display: none;
+    padding: 20px 0;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* --- Custom Deck (MIDI Grid) Styles --- */
+.deck-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+.deck-header h2 {
+    margin: 0;
+    color: #e0e0e0;
+    font-size: 1.6em;
+}
+
+.edit-mode-toggle-btn {
+    background-color: #f0ad4e; /* Orange */
+    color: #333;
+    font-weight: bold;
+}
+
+.edit-mode-toggle-btn:hover:not(:disabled) {
+    background-color: #ec971f;
+}
+
+.midi-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Force 5 columns */
+    gap: 15px; /* Spacing between pads */
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #4a4a4a;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
+    max-width: 780px; /* Adjust max-width to accommodate 5 columns within container */
+    margin: 0 auto; /* Center the grid */
+}
+
+.midi-button {
+    width: 100%;
+    padding-bottom: 100%; /* Makes height equal to width */
+    position: relative;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    background-color: #607d8b; /* Default color, overridden by JS */
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.1) 100%);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    overflow: hidden;
+    cursor: pointer;
+    border: none;
+}
+
+.midi-button .button-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 1.3;
+    padding: 5px;
+}
+
+.midi-button.active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 0 10px rgba(255,255,255,0.3);
+    border: 2px solid #fff;
+}
+
+.midi-button.unconfigured {
+    background-color: #444 !important;
+    background-image: none !important;
+    cursor: pointer;
+    opacity: 0.8;
+    box-shadow: none;
+    transform: none;
+    border: 1px dashed #777;
+    color: #999;
+    font-style: italic;
+}
+
+/* Ensure disabled buttons have correct cursor for configuration */
+.midi-button:disabled {
+    background-color: #555 !important;
+    background-image: none !important;
+    opacity: 0.6;
+    box-shadow: none;
+    transform: none;
+    border: none;
+    cursor: pointer; /* Allows clicking for configuration even if disconnected */
+}
+
+.midi-button.unconfigured:disabled {
+    background-color: #3a3a3a !important;
+    border: 1px dashed #555;
+    color: #777;
+    cursor: pointer;
+}
+
+.midi-button.edit-mode {
+    border: 2px dashed #f0ad4e;
+    cursor: pointer;
+    animation: pulseEdit 1s infinite alternate;
+}
+
+.midi-button.edit-mode:hover {
+    box-shadow: 0 0 15px rgba(240, 173, 78, 0.7);
+}
+
+@keyframes pulseEdit {
+    from { border-color: #f0ad4e; }
+    to { border-color: #ffd700; }
+}
+
+/* --- Info Footer --- */
+.info-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #555;
+    font-size: 0.9em;
+    color: #b0b0b0;
+}
+
+/* --- Modal Styling --- */
+.modal, #cueConfigModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #3a3a3a;
+    margin: auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    color: #e0e0e0;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 32px;
+    font-weight: bold;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #fff;
+}
+
+.modal-content h2 {
+    color: #90caf9;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #b0b0b0;
+    font-size: 0.95em;
+}
+
+.form-group input[type="number"],
+.form-group input[type="text"],
+.form-group input[type="color"],
+.form-group select {
+    width: calc(100% - 24px); /* Adjust for padding */
+    padding: 12px;
+    border: 1px solid #555;
+    border-radius: 8px;
+    background-color: #4a4a4a;
+    color: #e0e0e0;
+    font-size: 1em;
+    outline: none;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.form-group input[type="color"] {
+    height: 45px; /* Adjust height for color input */
+    padding: 5px; /* Reduce padding for color picker */
+    cursor: pointer;
+}
+
+.modal-content button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1.1em;
+    border-radius: 8px;
+}
+
+.modal-content button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+/* --- Cue List Specific Styles --- */
+.cue-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 10px;
+    flex-wrap: wrap;
+}
+
+.cue-list-header h2 {
+    margin: 0;
+    color: #e0e0e0;
+    font-size: 1.6em;
+}
+
+.cue-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.add-cue-btn {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+
+.add-cue-btn:hover:not(:disabled) {
+    background-color: #45a049;
+}
+
+.cue-nav-btn {
+    background-color: #2196F3; /* Blue */
+    color: white;
+    font-weight: bold;
+}
+
+.cue-nav-btn:hover:not(:disabled) {
+    background-color: #0b7dda;
+}
+
+.cues-container {
+    background-color: #4a4a4a;
+    border-radius: 10px;
+    padding: 15px;
+    min-height: 200px;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.no-cues-message {
+    color: #b0b0b0;
+    text-align: center;
+    font-style: italic;
+    padding: 20px;
+}
+
+.cue-item {
+    background-color: #555;
+    border-radius: 8px;
+    /* Ajustes para compactar a altura da linha */
+    padding: 5px 15px; /* Reduzido de 8px para 5px */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Aligns content to the left */
+    font-size: 0.95em; /* Ligeiramente reduzido */
+    line-height: 1.5; /* Reduzido de 1.7 para 1.5 para mais compactação */
+    color: #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s ease, transform 0.1s ease, border 0.2s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+    min-height: 25px; /* Reduzido de 40px para 35px */
+    margin-bottom: 1px; /* Reduzido de 5px para 3px */
+}
+
+.cue-item:hover {
+    background-color: #6a6a6a; /* Darker on hover */
+}
+
+.cue-item.active-cue {
+    border: 1px solid #4CAF50; /* Green border for active cue */
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+    background-color: #444; /* Slightly darker background for active */
+}
+
+.cue-info {
+    flex-grow: 1; /* Allows info to take available space */
+    display: flex; /* Makes it a flex container */
+    align-items: center; /* Aligns vertically */
+    white-space: nowrap; /* Tries to keep everything on one line */
+    overflow: hidden; /* Hides excess */
+    text-overflow: ellipsis; /* Adds "..." if text is cut */
+    min-width: 0; /* Allows flex item to shrink below its content size */
+    margin-right: 10px; /* Space between info and actions */
+}
+
+.cue-number {
+    font-weight: bold;
+    color: #f0f0f0;
+    margin-right: 5px; /* Space after number */
+    flex-shrink: 0; /* Prevents shrinking */
+}
+
+.cue-name {
+    font-weight: bold;
+    color: #f0f0f0;
+    margin-right: 5px; /* Space after name */
+    flex-shrink: 1; /* Allows shrinking */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds "..." to name if too long */
+    min-width: 30px; /* Minimum width for the name */
+}
+
+.separator {
+    color: #999;
+    margin: 0 5px; /* Space around the separator */
+    flex-shrink: 0; /* Ensures separator doesn't shrink */
+}
+
+.cue-details {
+    font-size: 0.8em; /* Ligeiramente reduzido para os detalhes */
+    color: #cccccc;
+    flex-shrink: 1; /* Allows more shrinking than the name */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds "..." to details if too long */
+    white-space: nowrap; /* Ensures details try to stay on one line */
+}
+
+.cue-actions {
+    display: flex;
+    gap: 5px; /* Space between action buttons */
+    margin-left: auto; /* Pushes actions to the right */
+    flex-shrink: 0; /* Ensures buttons don't shrink */
+}
+
+.cue-edit-btn,
+.cue-delete-btn {
+    background: none;
+    border: none;
+    color: #bbb;
+    font-size: 1.1em; /* Ligeiramente menor */
+    cursor: pointer;
+    padding: 3px; /* Reduzido de 5px para 3px */
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.cue-edit-btn:hover {
+    color: #fff;
+    background-color: #607d8b; /* Blue-grey on hover */
+}
+
+.cue-delete-btn {
+    color: #f44336; /* Red */
+}
+
+.cue-delete-btn:hover {
+    color: #fff;
+    background-color: #dc3545; /* Darker red on hover */
+}
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .connection-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .ip-input-group {
+        width: 100%;
+        max-width: none;
+    }
+
+    button {
+        width: 100%;
+        max-width: none;
+    }
+
+    .tab-button {
+        font-size: 1em;
+        padding: 12px 15px;
+    }
+
+    .midi-grid {
+        grid-template-columns: repeat(4, 1fr); /* Adjust to 4 columns on medium screens */
+        gap: 10px;
+        max-width: none; /* Allow grid to fill width */
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+
+    .modal-content h2 {
+        font-size: 1.5em;
+    }
+
+    /* Cue List adjustments for medium screens */
+    .cue-item {
+        padding: 1px 10px; /* Mais compacto em mobile */
+        font-size: 0.9em; /* Mais pequeno */
+        min-height: 20px; /* Reduzido min-height */
+    }
+    .cue-name {
+        min-width: 20px; /* Reduce min-width */
+    }
+    .cue-number {
+        margin-right: 3px;
+    }
+    .separator {
+        margin: 0 3px;
+    }
+    .cue-actions {
+        gap: 3px;
+        margin-left: 5px;
+    }
+    .cue-edit-btn,
+    .cue-delete-btn {
+        font-size: 1em; /* Mais pequeno para caber */
+        padding: 2px; /* Mais pequeno */
+    }
+    .cue-details {
+        font-size: 0.75em; /* Ainda mais pequeno para os detalhes */
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    .tab-button {
+        padding: 10px 10px;
+        font-size: 0.9em;
+    }
+
+    .midi-grid {
+        grid-template-columns: repeat(3, 1fr); /* Further reduce to 3 columns on small screens */
+        gap: 8px;
+    }
+
+    .modal-content {
+        padding: 15px;
+    }
+
+    /* Cue List adjustments for small screens */
+    .cue-list-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .cue-list-header h2 {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .cue-controls {
+        width: 100%;
+        justify-content: space-around;
+    }
+    .add-cue-btn, .cue-nav-btn {
+        flex-grow: 1;
+        max-width: 48%; /* To fit side by side */
+    }
+    .cue-item {
+        flex-direction: row; /* Keep on one line if possible */
+        align-items: center;
+        padding: 0px 6px; /* Ainda mais compacto */
+        font-size: 0.8em; /* Tamanho base da fonte ainda mais reduzido */
+        min-height: 18px; /* Min height para mobile pequeno */
+    }
+    .cue-info {
+        flex-wrap: nowrap; /* Force no wrapping for info details */
+    }
+    .cue-name, .cue-details {
+        min-width: unset; /* Allow full shrinking */
+    }
+    .cue-details {
+        margin-left: 3px; /* Reduced margin */
+        font-size: 0.7em; /* Mais pequeno para os detalhes */
+    }
+    .cue-actions {
+        flex-shrink: 0;
+        margin-left: 3px;
+        gap: 2px;
+    }
+    .cue-edit-btn, .cue-delete-btn {
+        font-size: 0.9em; /* Pequeno para caber */
+        padding: 1px; /* Mínimo padding */
+    }
+}
+
+.deck-actions {
+    display: flex;
+    gap: 10px; /* Espaçamento entre os botões */
+    flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
+    justify-content: flex-end; /* Alinha à direita */
+}
+
+/* Estilo para o botão de limpar deck */
+.clear-deck-btn {
+    background-color: #f44336; /* Cor vermelha para indicar ação destrutiva */
+    color: white;
+    font-weight: bold;
+}
+
+.clear-deck-btn:hover:not(:disabled) {
+    background-color: #d32f2f;
+}
+
+/* Ajustes responsivos para os botões do cabeçalho */
+@media (max-width: 768px) {
+    .deck-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px; /* Espaçamento entre o título e os botões */
+    }
+    .deck-actions {
+        width: 100%;
+        justify-content: space-between; /* Distribui os botões */
+    }
+    .edit-mode-toggle-btn,
+    .clear-deck-btn {
+        flex-grow: 1; /* Permite que os botões cresçam */
+        max-width: 48%; /* Para que fiquem lado a lado */
+        padding: 10px 15px; /* Ajusta o padding */
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 480px) {
+    .edit-mode-toggle-btn,
+    .clear-deck-btn {
+        max-width: 100%; /* Cada botão ocupa a largura total */
+    }
+}
+
+/* Estilos para Drag & Drop na Cue List */
+.cue-item.dragging {
+    opacity: 0.5; /* Torna o item arrastado um pouco transparente */
+    border: 2px dashed #007bff; /* Borda tracejada */
+}
+
+.cue-item.drag-over-top {
+    border-top: 2px solid #007bff; /* Linha azul no topo para indicar drop */
+}
+
+.cue-item.drag-over-bottom {
+    border-bottom: 2px solid #007bff; /* Linha azul na parte inferior para indicar drop */
+}
